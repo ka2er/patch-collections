@@ -1,0 +1,47 @@
+--- ../currentcost-uploader-read-only/currentCostListener	2011-05-10 23:31:12.000000000 +0200
++++ currentCostListener	2011-05-11 22:19:20.000000000 +0200
+@@ -36,14 +36,14 @@
+ # = Variables =
+ # =============
+ # get user settings:
+-my %config = do '/home/nick/currentcost/config.pl' or die "no config file found";
++my %config = do '/home/seb/currentcost/config.pl' or die "no config file found";
+ # my $configFromENV = `echo \$SLOCATION`;
+ # my %config = do "$configFromENV/config.pl" or die "no config file found";
+ # Globals, if you need to edit these, let me know why, cheers
+ my $daemonName = "currentCostListener";
+ my $version = 'v1.0'; #version obviously, not used in any logic
+ my $dieNow        = 0;	# used for "infinte loop" construct - allows daemon mode to gracefully exit
+-my $pidFilePath   = "/var/run/";	# PID file path
++my $pidFilePath   = "/var/run/currentCost/";	# PID file path
+ my $pidFileName       = $pidFilePath . $daemonName . ".pid";
+ my $startDate;		# Start date of sampling period
+ my $finishDate;		# Finish date of sampling period
+@@ -187,9 +187,9 @@
+   }
+ 	&logit("pushReading() sending: ".$_[0]);
+   	# Send data
+-	# https://www.google.com/powermeter/feeds/user/00528190529187229408/00528190529187229408/variable/currentcost.envi.MyEnvi/durMeasurement
++	# https://www.google.com/powermeter/feeds/user/00528190529187229408/00528190529187229408/variable/currentcost.envi.MyEnvi.d1/durMeasurement
+   	my $httpres = $webobj->post(
+-    	"https://www.google.com/powermeter/feeds/user/$config{'googleUserId'}/$config{'securityZone'}/variable/$config{'meterDeviceId'}.v1/durMeasurement",
++    	"https://www.google.com/powermeter/feeds/user/$config{'googleUserId'}/$config{'securityZone'}/variable/$config{'meterDeviceId'}.d1/durMeasurement",
+     	'Authorization' => 'AuthSub token="'.$config{'AuthSubToken'}.'"',
+     	'Content-type' => 'application/atom+xml',
+     	'Content-length' => length($_[0]),
+@@ -228,7 +228,7 @@
+ 	&logit("set startDate: $startDate"); # debug
+ 	
+ 	# Grab the current power reading
+-	if ($_[0] =~ m/<msg>.*<tmpr>(.*)<\/tmpr><sensor>0<\/sensor><id>04077<\/id><type>1<\/type><ch1><watts>(\d+)<\/watts><\/ch1><\/msg>/g){
++	if ($_[0] =~ m/<msg>.*<tmpr>(.*)<\/tmpr><sensor>0<\/sensor><id>00077<\/id><type>1<\/type><ch1><watts>(\d+)<\/watts><\/ch1><\/msg>/g){
+ 		$powerLevel = $2;
+ 		$temperature = $1;
+ 		&logit("powermeter regex: \$powerLevel:$powerLevel \$temperature:$temperature"); # debug
+@@ -343,4 +343,4 @@
+ # = notes =
+ # =========
+ 
+-rsync -ave ssh --force currentcost/ nick@192.168.0.222:/home/nick/currentcost/
+\ Pas de fin de ligne à la fin du fichier.
++rsync -ave ssh --force currentcost/ nick@192.168.0.222:/home/nick/currentcost/
