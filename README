@@ -1,1 +1,5 @@
 currentcost-uploader : http://code.google.com/p/currentcost-uploader/
+
+- fix device ID
+- fix log file path
+- fix config file path
