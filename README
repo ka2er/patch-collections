@@ -3,3 +3,8 @@ currentcost-uploader : http://code.google.com/p/currentcost-uploader/
 - fix device ID
 - fix log file path
 - fix config file path
+
+post-process (NZBGET) : http://nzbget.sourceforge.net/
+
+- add mkvdts2ac3 option
+- add rename.rar option (trust linuxren.sh)
